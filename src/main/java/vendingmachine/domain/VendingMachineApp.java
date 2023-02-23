@@ -2,5 +2,6 @@ package vendingmachine.domain;
 
 interface VendingMachineApp {
     VendingMachineResult acceptCoin(String coin);
-    String displayCoins();
+    VendingMachineResult selectProduct(String product);
+    String display();
 }

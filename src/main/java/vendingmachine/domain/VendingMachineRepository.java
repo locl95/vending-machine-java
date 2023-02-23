@@ -2,5 +2,6 @@ package vendingmachine.domain;
 
 public interface VendingMachineRepository {
     VendingMachineResult acceptCoin(String coin);
-    String displayCoins();
+    VendingMachineResult selectProduct(String product);
+    String display();
 }

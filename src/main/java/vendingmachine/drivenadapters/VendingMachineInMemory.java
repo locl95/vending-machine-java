@@ -28,20 +28,50 @@ public class VendingMachineInMemory implements VendingMachineRepository {
              Coin cc = maybeCoin.get();
              Double c = cc.getValue();
              if(cc.getValue() != 0.01) {
-                 state = new VendingMachineState(state.getAddedCoins() + c, state.getCoinsToReturn());
+                 double addedCoins = state.getAddedCoins() + c;
+                 state = new VendingMachineState(addedCoins, state.getCoinsToReturn(), String.valueOf(addedCoins));
                  return new CoinsAdded(c);
              }
              else {
-                 state = new VendingMachineState(state.getAddedCoins(), state.getCoinsToReturn() + c);
+                 state = new VendingMachineState(state.getAddedCoins(), state.getCoinsToReturn() + c, state.getDisplay());
                  return new CoinsToReturn(c);
              }
         }
-        else return new VendingMachineError("Unknown Coin");
+        else return new VendingMachineError("Unknown Coin: " + coin);
     }
 
     @Override
-    public String displayCoins() {
-        if (state.getAddedCoins() == 0) return "INSERT COINS";
-        return state.getAddedCoins().toString();
+    public VendingMachineResult selectProduct(String product) {
+        List<Product> products = List
+                .of(new Product("cola",1.0),
+                    new Product("chips",0.5),
+                    new Product("candy",0.65)
+                );
+
+        Optional<Product> maybeProduct = products.stream().filter( (cc) -> cc.getProduct().equals(product)).findFirst();
+        if (maybeProduct.isPresent()) {
+            Product p = maybeProduct.get();
+            if (state.getAddedCoins() >= p.getCost()) {
+                state = new VendingMachineState(0.0, state.getCoinsToReturn() + state.getAddedCoins() - p.getCost(), "THANK YOU");
+                return new ProductSelected(product);
+            }
+            else {
+                state = new VendingMachineState(state.getAddedCoins(), state.getCoinsToReturn(), "PRICE "+ p.getCost());
+                return new VendingMachineError("Not Enough Money: " + state.getAddedCoins() + "/" + p.getCost());
+            }
+        }
+        else return new VendingMachineError("Unknown Product: " + product);
+    }
+
+    private String calculateDisplay(String currentDisplay) {
+        if(currentDisplay.contains("PRICE") && state.getAddedCoins() > 0) return String.valueOf(state.getAddedCoins());
+        return "INSERT COINS";
+    }
+
+    @Override
+    public String display() {
+        String currentDisplay = state.getDisplay();
+        state = new VendingMachineState(state.getAddedCoins(), state.getCoinsToReturn(), calculateDisplay(currentDisplay));
+        return currentDisplay;
     }
 }

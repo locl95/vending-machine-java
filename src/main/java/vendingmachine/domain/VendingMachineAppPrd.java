@@ -14,7 +14,12 @@ public class VendingMachineAppPrd implements VendingMachineApp {
     }
 
     @Override
-    public String displayCoins() {
-        return vendingMachine.displayCoins();
+    public VendingMachineResult selectProduct(String product) {
+        return vendingMachine.selectProduct(product);
+    }
+
+    @Override
+    public String display() {
+        return vendingMachine.display();
     }
 }
