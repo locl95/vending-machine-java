@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import vendingmachine.domain.*;
 import vendingmachine.drivenadapters.VendingMachineInMemory;
 
+import java.util.List;
+
 public class VendingMachineAppTest {
 
     @Test
     public void acceptCoins() {
-        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
+        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS", List.of());
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals(new CoinsAdded(0.05), vendingMachineApp.insertCoin("nickel"));
@@ -17,7 +19,7 @@ public class VendingMachineAppTest {
 
     @Test
     public void displayInsertCoins() {
-        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
+        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS", List.of());
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
@@ -25,7 +27,7 @@ public class VendingMachineAppTest {
 
     @Test
     public void displayCoins() {
-        VendingMachineState initialState = new VendingMachineState(2.5, 0.0, String.valueOf(2.5));
+        VendingMachineState initialState = new VendingMachineState(2.5, 0.0, String.valueOf(2.5), List.of());
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("2.5", vendingMachineApp.display());
@@ -33,7 +35,7 @@ public class VendingMachineAppTest {
 
     @Test
     public void displayWhileAddingCoins() {
-        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
+        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS", List.of());
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
@@ -47,14 +49,21 @@ public class VendingMachineAppTest {
 
     @Test
     public void selectProduct() {
-        VendingMachineState initialState = new VendingMachineState(1.0, 0.0, String.valueOf(1.0));
+        VendingMachineState initialState = new VendingMachineState(1.0, 0.0, String.valueOf(1.0), List.of(new Product("cola", 1.0,1)));
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals(new ProductSelected("cola"), vendingMachineApp.selectProduct("cola"));
     }
     @Test
+    public void selectSoldOutProduct() {
+        VendingMachineState initialState = new VendingMachineState(1.0, 0.0, String.valueOf(1.0), List.of(new Product("cola", 1.0,0)));
+        VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
+        VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
+        Assertions.assertEquals(new VendingMachineError("Product Sold Out: cola"), vendingMachineApp.selectProduct("cola"));
+    }
+    @Test
     public void displayWhileSelectingProduct() {
-        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
+        VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS", List.of(new Product("cola", 1.0,1)));
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
@@ -74,10 +83,18 @@ public class VendingMachineAppTest {
 
     @Test
     public void returnCoins() {
-        VendingMachineState initialState = new VendingMachineState(0.0, 1.0, "INSERT COINS");
+        VendingMachineState initialState = new VendingMachineState(0.0, 1.0, "INSERT COINS", List.of());
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals(new CoinsReturned(1.0), vendingMachineApp.returnCoins());
+    }
+
+    @Test
+    public void returnCoinsIfIChangeMyMind() {
+        VendingMachineState initialState = new VendingMachineState(1.0, 1.0, "INSERT COINS", List.of());
+        VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
+        VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
+        Assertions.assertEquals(new CoinsReturned(2.0), vendingMachineApp.returnCoins());
     }
 
 

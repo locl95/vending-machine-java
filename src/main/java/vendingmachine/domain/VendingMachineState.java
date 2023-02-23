@@ -1,14 +1,22 @@
 package vendingmachine.domain;
 
+import java.util.List;
+
 public class VendingMachineState {
     private final Double addedCoins;
     private final Double coinsToReturn;
     private final String display;
+    List<Product> products;
 
-    public VendingMachineState(Double addedCoins, Double coinsToReturn, String display) {
+    public VendingMachineState(Double addedCoins, Double coinsToReturn, String display, List<Product> products) {
         this.addedCoins = addedCoins;
         this.coinsToReturn = coinsToReturn;
         this.display = display;
+        this.products = products;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
     public Double getCoinsToReturn() {
