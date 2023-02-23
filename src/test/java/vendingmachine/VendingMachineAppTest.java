@@ -70,8 +70,14 @@ public class VendingMachineAppTest {
         vendingMachineApp.selectProduct("cola");
         Assertions.assertEquals("THANK YOU", vendingMachineApp.display());
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
+    }
 
-
+    @Test
+    public void returnCoins() {
+        VendingMachineState initialState = new VendingMachineState(0.0, 1.0, "INSERT COINS");
+        VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
+        VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
+        Assertions.assertEquals(new CoinsReturned(1.0), vendingMachineApp.returnCoins());
     }
 
 

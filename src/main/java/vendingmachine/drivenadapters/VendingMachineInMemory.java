@@ -41,6 +41,13 @@ public class VendingMachineInMemory implements VendingMachineRepository {
     }
 
     @Override
+    public VendingMachineResult returnCoins() {
+        double coinsToReturn = state.getCoinsToReturn();
+        state = new VendingMachineState(state.getAddedCoins(), 0.0, state.getDisplay());
+        return new CoinsReturned(coinsToReturn);
+    }
+
+    @Override
     public VendingMachineResult selectProduct(String product) {
         List<Product> products = List
                 .of(new Product("cola",1.0),
