@@ -11,11 +11,12 @@ public class VendingMachineRepositoryTest {
     public void acceptCoins() {
         VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
-        Assertions.assertEquals(new CoinsAdded(0.05), vendingMachineRepository.acceptCoin("nickel"));
-        Assertions.assertEquals(new CoinsAdded(0.10), vendingMachineRepository.acceptCoin("dime"));
-        Assertions.assertEquals(new CoinsAdded(0.25), vendingMachineRepository.acceptCoin("quarter"));
-        Assertions.assertEquals(new CoinsToReturn(0.01), vendingMachineRepository.acceptCoin("penny"));
-        Assertions.assertEquals(new VendingMachineError("Unknown Coin: euro"), vendingMachineRepository.acceptCoin("euro"));
+        Assertions.assertEquals(new CoinsAdded(0.05), vendingMachineRepository.insertCoin("nickel"));
+        Assertions.assertEquals(new CoinsAdded(0.10), vendingMachineRepository.insertCoin("dime"));
+        Assertions.assertEquals(new CoinsAdded(0.25), vendingMachineRepository.insertCoin("quarter"));
+        Assertions.assertEquals(new CoinsToReturn(0.01), vendingMachineRepository.insertCoin("penny"));
+        Assertions.assertEquals(new VendingMachineError("Unknown Coin: euro"), vendingMachineRepository.insertCoin("euro"));
+        Assertions.assertEquals(new VendingMachineState(0.4, 0.01, "0.4"), vendingMachineRepository.getState());
     }
 
     @Test
@@ -47,6 +48,14 @@ public class VendingMachineRepositoryTest {
         VendingMachineState initialState = new VendingMachineState(0.75, 0.0, "0.75");
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         Assertions.assertEquals(new VendingMachineError("Not Enough Money: 0.75/1.0"), vendingMachineRepository.selectProduct("cola"));
+    }
+
+    @Test
+    public void changeIsCalculatedCorrectly() {
+        VendingMachineState initialState = new VendingMachineState(1.0, 0.0, "1.0");
+        VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
+        vendingMachineRepository.selectProduct("chips");
+        Assertions.assertEquals(new VendingMachineState(0.0, 0.5, "THANK YOU"), vendingMachineRepository.getState());
     }
 
 

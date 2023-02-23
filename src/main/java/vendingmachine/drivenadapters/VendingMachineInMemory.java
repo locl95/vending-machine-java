@@ -13,7 +13,7 @@ public class VendingMachineInMemory implements VendingMachineRepository {
     }
 
     @Override
-    public VendingMachineResult acceptCoin(String coin) {
+    public VendingMachineResult insertCoin(String coin) {
 
         List<Coin> acceptedCoins = List
             .of(new Coin(0.05,"nickel"),
@@ -73,5 +73,10 @@ public class VendingMachineInMemory implements VendingMachineRepository {
         String currentDisplay = state.getDisplay();
         state = new VendingMachineState(state.getAddedCoins(), state.getCoinsToReturn(), calculateDisplay(currentDisplay));
         return currentDisplay;
+    }
+
+    @Override
+    public VendingMachineState getState() {
+        return state;
     }
 }

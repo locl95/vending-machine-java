@@ -9,8 +9,8 @@ public class VendingMachineAppPrd implements VendingMachineApp {
     }
 
     @Override
-    public VendingMachineResult acceptCoin(String coin) {
-        return vendingMachine.acceptCoin(coin);
+    public VendingMachineResult insertCoin(String coin) {
+        return vendingMachine.insertCoin(coin);
     }
 
     @Override

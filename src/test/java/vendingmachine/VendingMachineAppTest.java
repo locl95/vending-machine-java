@@ -12,7 +12,7 @@ public class VendingMachineAppTest {
         VendingMachineState initialState = new VendingMachineState(0.0, 0.0, "INSERT COINS");
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
-        Assertions.assertEquals(new CoinsAdded(0.05), vendingMachineApp.acceptCoin("nickel"));
+        Assertions.assertEquals(new CoinsAdded(0.05), vendingMachineApp.insertCoin("nickel"));
     }
 
     @Test
@@ -37,11 +37,11 @@ public class VendingMachineAppTest {
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
-        vendingMachineApp.acceptCoin("quarter");
+        vendingMachineApp.insertCoin("quarter");
         Assertions.assertEquals("0.25", vendingMachineApp.display());
-        vendingMachineApp.acceptCoin("penny");
+        vendingMachineApp.insertCoin("penny");
         Assertions.assertEquals("0.25", vendingMachineApp.display());
-        vendingMachineApp.acceptCoin("nickel");
+        vendingMachineApp.insertCoin("nickel");
         Assertions.assertEquals("0.3", vendingMachineApp.display());
     }
 
@@ -58,14 +58,14 @@ public class VendingMachineAppTest {
         VendingMachineRepository vendingMachineRepository = new VendingMachineInMemory(initialState);
         VendingMachineAppPrd vendingMachineApp = new VendingMachineAppPrd(vendingMachineRepository);
         Assertions.assertEquals("INSERT COINS", vendingMachineApp.display());
-        vendingMachineApp.acceptCoin("quarter");
-        vendingMachineApp.acceptCoin("quarter");
-        vendingMachineApp.acceptCoin("quarter");
+        vendingMachineApp.insertCoin("quarter");
+        vendingMachineApp.insertCoin("quarter");
+        vendingMachineApp.insertCoin("quarter");
         Assertions.assertEquals("0.75", vendingMachineApp.display());
         vendingMachineApp.selectProduct("cola");
         Assertions.assertEquals("PRICE 1.0", vendingMachineApp.display());
         Assertions.assertEquals("0.75", vendingMachineApp.display());
-        vendingMachineApp.acceptCoin("quarter");
+        vendingMachineApp.insertCoin("quarter");
         Assertions.assertEquals("1.0", vendingMachineApp.display());
         vendingMachineApp.selectProduct("cola");
         Assertions.assertEquals("THANK YOU", vendingMachineApp.display());
