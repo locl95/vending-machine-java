@@ -1,0 +1,3 @@
+package vendingmachine.domain
+
+interface VendingMachineResult
